@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: clamp(1.8em, 5vw, 2.5em);
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: clamp(0.9em, 3vw, 1.1em);
+        }
+
+        .login-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+            padding: 20px;
+        }
+
+        .login-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-form h2 {
+            color: #333;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 300;
+            font-size: clamp(1.2em, 4vw, 1.5em);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: clamp(0.9em, 3vw, 1em);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: clamp(0.9em, 3vw, 1em);
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: clamp(0.9em, 3vw, 1em);
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: #fadbd8;
+            border-radius: 5px;
+            font-size: clamp(0.8em, 3vw, 0.9em);
+        }
+
+        .profile-section {
+            display: none;
+            padding: 20px;
+        }
+
+        .profile-header {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e1e5e9;
+        }
+
+        @media (min-width: 768px) {
+            .profile-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .user-info h2 {
+            color: #333;
+            font-size: clamp(1.3em, 5vw, 2em);
+            margin-bottom: 5px;
+        }
+
+        .user-info p {
+            color: #666;
+            font-size: clamp(0.9em, 3vw, 1.1em);
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: clamp(0.8em, 3vw, 0.9em);
+            transition: background 0.3s ease;
+            align-self: flex-start;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
+
+        .stat-card h3 {
+            color: #333;
+            font-size: clamp(1.2em, 4vw, 1.8em);
+            margin-bottom: 8px;
+        }
+
+        .stat-card p {
+            color: #666;
+            font-size: clamp(0.7em, 2.5vw, 0.9em);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .graphs-section {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        @media (min-width: 992px) {
+            .graphs-section {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .graph-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e1e5e9;
+            overflow: hidden;
+        }
+
+        .graph-title {
+            font-size: clamp(1em, 3vw, 1.3em);
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .graph-content {
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: clamp(0.7em, 2.5vw, 0.8em);
+            pointer-events: none;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            max-width: 200px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Responsive adjustments for graphs */
+        #xpBubbleGraph svg,
+        #skillsPolarGraph svg {
+            width: 100%;
+            height: auto;
+        }
+
+        /* Mobile-specific adjustments */
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .graph-content {
+                min-height: 200px;
+            }
+            
+            .login-form {
+                padding: 20px;
+            }
+            
+            .profile-section,
+            .login-section {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Learn Dashboard</h1>
+            <p>Track your progress and achievements</p>
+        </div>
+
+        <div id="loginSection" class="login-section">
+            <form id="loginForm" class="login-form">
+                <h2>Login to Dashboard</h2>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+            </form>
+        </div>
+
+        <div id="profileSection" class="profile-section">
+            <div class="profile-header">
+                <div class="user-info">
+                    <h2 id="userName">Loading...</h2>
+                    <p id="userLevel">Level: Loading...</p>
+                </div>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3 id="auditRatio">--</h3>
+                    <p>Audit Ratio</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="passedAudits">--</h3>
+                    <p>Passed Audits</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="failedAudits">--</h3>
+                    <p>Failed Audits</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="totalXP">--</h3>
+                    <p>Total XP</p>
+                </div>
+            </div>
+
+            <div class="graphs-section">
+                <div class="graph-container">
+                    <div class="graph-title">XP Progress Timeline (2025, 5K+ XP)</div>
+                    <div id="xpBubbleGraph" class="graph-content"></div>
+                </div>
+                <div class="graph-container">
+                    <div class="graph-title">Skills Wheel</div>
+                    <div id="skillsPolarGraph" class="graph-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -90,15 +90,15 @@ document.addEventListener('DOMContentLoaded', () => {
 // Login handler
 async function handleLogin(e) {
     e.preventDefault();
-    
+
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
-    
+
     if (!username || !password) {
         showError('Please enter both username and password');
         return;
     }
-    
+
     try {
         const credentials = btoa(`${username}:${password}`);
         const response = await fetch(AUTH_URL, {
@@ -108,22 +108,22 @@ async function handleLogin(e) {
                 'Content-Type': 'application/json'
             }
         });
-        
+
         if (!response.ok) {
             throw new Error('Invalid credentials');
         }
-        
+
         const data = await response.json();
         jwtToken = data;
-        
+
         if (!jwtToken) {
             throw new Error('No token received from server');
         }
-        
+
         localStorage.setItem('jwtToken', jwtToken);
         showProfile();
         await loadUserData();
-        
+
     } catch (error) {
         showError('Login failed. Please check your credentials.');
         console.error('Login error:', error);
@@ -161,7 +161,7 @@ async function graphqlQuery(query, variables = {}) {
     if (!jwtToken) {
         throw new Error('No authentication token');
     }
-    
+
     try {
         const response = await fetch(GRAPHQL_URL, {
             method: 'POST',
@@ -171,17 +171,17 @@ async function graphqlQuery(query, variables = {}) {
             },
             body: JSON.stringify({ query, variables })
         });
-        
+
         if (!response.ok) {
             throw new Error(`GraphQL query failed: ${response.status}`);
         }
-        
+
         const data = await response.json();
-        
-        if (data.errors) {
-            throw new Error(data.errors[0].message);
-        }
-        
+
+        // if (data.errors) {
+        //     throw new Error(data.errors[0].message);
+        // }
+
         return data.data;
     } catch (error) {
         console.error('GraphQL query error:', error);
@@ -194,7 +194,7 @@ async function loadUserData() {
     try {
         document.getElementById('userName').textContent = 'Loading...';
         document.getElementById('userLevel').textContent = 'Level: Loading...';
-        
+
         const [userInfo, auditsInfo, levelInfo, xpProgress, skillsData] = await Promise.all([
             graphqlQuery(GET_USER_INFO).catch(() => ({ user: [{}] })),
             graphqlQuery(GET_AUDITS_INFO).catch(() => ({ user: [{}] })),
@@ -202,34 +202,34 @@ async function loadUserData() {
             graphqlQuery(GET_XP_PROGRESS).catch(() => ({ transaction: [] })),
             graphqlQuery(GET_SKILLS).catch(() => ({ user: [{ transactions: [] }] }))
         ]);
-        
+
         // Update user info
         const user = userInfo.user[0] || {};
         const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'User';
         document.getElementById('userName').textContent = fullName;
-        
+
         // Update level
         const level = levelInfo.transaction[0]?.amount || 0;
         document.getElementById('userLevel').textContent = `Level: ${level}`;
-        
+
         // Update audit info
         const auditData = auditsInfo.user[0] || {};
         const auditRatio = auditData.auditRatio || 0;
         const passedAudits = auditData.audits_aggregate?.aggregate?.count || 0;
         const failedAudits = auditData.failed_audits?.aggregate?.count || 0;
-        
+
         document.getElementById('auditRatio').textContent = `${auditRatio.toFixed(1)}`;
         document.getElementById('passedAudits').textContent = passedAudits;
         document.getElementById('failedAudits').textContent = failedAudits;
-        
+
         // Update total XP
         const totalXP = xpProgress.transaction.reduce((sum, tx) => sum + (tx.amount || 0), 0);
         document.getElementById('totalXP').textContent = totalXP.toLocaleString();
-        
+
         // Generate enhanced graphs
         generateEnhancedXPGraph(xpProgress.transaction);
         generateEnhancedSkillsGraph(skillsData);
-        
+
     } catch (error) {
         console.error('Error loading user data:', error);
         showError('Failed to load user data. Please try logging in again.');
@@ -241,11 +241,11 @@ async function loadUserData() {
 function generateEnhancedXPGraph(transactions) {
     const container = document.getElementById('xpBubbleGraph');
     container.innerHTML = '';
-    
+
     // Filter for 2025 projects with minimum 5K XP
     const filteredData = transactions.filter(tx => {
         const date = new Date(tx.createdAt);
-        return date.getFullYear() === 2025 && (tx.amount >= 5120 ||  tx.amount <= -5120); // 5K XP
+        return date.getFullYear() === 2025 && (tx.amount >= 5120 || tx.amount <= -5120); // 5K XP
     });
 
     // Use filtered data or fallback
@@ -256,10 +256,10 @@ function generateEnhancedXPGraph(transactions) {
         { amount: 8192, createdAt: "2025-04-01T10:00:00Z", object: { name: "Frontend Framework" } },
         { amount: 12288, createdAt: "2025-05-01T10:00:00Z", object: { name: "System Administration" } }
     ];
-    
+
     // Process data
     let cumulativeXP = 0;
-    
+
     const processedData = data.map(tx => {
         cumulativeXP += tx.amount;
         return {
@@ -268,23 +268,23 @@ function generateEnhancedXPGraph(transactions) {
             date: new Date(tx.createdAt)
         };
     });
-    
+
     if (processedData.length === 0) {
         container.innerHTML = '<p style="color: #666; text-align: center;">No XP data available for 2025 (5K+ XP)</p>';
         return;
     }
-    
+
     const width = 550;
     const height = 300;
     const margin = { top: 20, right: 30, bottom: 40, left: 50 };
-    
+
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', width);
     svg.setAttribute('height', height);
     svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
     svg.style.background = 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)';
     svg.style.borderRadius = '10px';
-    
+
     // Create gradient definitions
     const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
     const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
@@ -425,28 +425,28 @@ function generateEnhancedSkillsGraph(skillsData) {
     const data = (skillsData && skillsData.user?.[0]?.transactions?.length > 0) ? skillsData : fallbackData;
     const transactions = data.user[0]?.transactions || [];
     console.log(transactions);
-    
+
 
     // Process skills data
     const skillMap = new Map();
     transactions.forEach(tx => {
-        const skill = tx.type ;
-        if(skillMap.has(skill)){
-            if(tx.amount>=skillMap.get(skill)){
-            skillMap.set(skill, tx.amount);
+        const skill = tx.type;
+        if (skillMap.has(skill)) {
+            if (tx.amount >= skillMap.get(skill)) {
+                skillMap.set(skill, tx.amount);
 
 
             }
 
 
-        }else{
+        } else {
 
-        skillMap.set(skill, tx.amount);
+            skillMap.set(skill, tx.amount);
 
         }
     });
     console.log(skillMap);
-    
+
 
     const skills = Array.from(skillMap.entries())
         .map(([type, amount]) => ({ type, amount }))
@@ -459,7 +459,7 @@ function generateEnhancedSkillsGraph(skillsData) {
         return;
     }
 
-    
+
 
     const width = 400;
     const height = 300;
@@ -522,17 +522,17 @@ function generateEnhancedSkillsGraph(skillsData) {
         svg.appendChild(rect);
 
         // Add skill labels (inside bars)
-       
-            const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            label.setAttribute('x', x+ barWidth / 2);
-            label.setAttribute('y', 280); // 15px below the top of the bar
-            label.setAttribute('text-anchor', 'middle');
-            label.setAttribute('fill', '#000000ff'); // White for contrast against gradient
-            label.setAttribute('font-size', '10px');
-            label.setAttribute('font-weight', '500');
-            label.textContent = just(skill.type);
-            svg.appendChild(label);
-        
+
+        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        label.setAttribute('x', x + barWidth / 2);
+        label.setAttribute('y', 280); // 15px below the top of the bar
+        label.setAttribute('text-anchor', 'middle');
+        label.setAttribute('fill', '#000000ff'); // White for contrast against gradient
+        label.setAttribute('font-size', '10px');
+        label.setAttribute('font-weight', '500');
+        label.textContent = just(skill.type);
+        svg.appendChild(label);
+
     });
 
     // Draw grid lines
@@ -557,7 +557,7 @@ function generateEnhancedSkillsGraph(skillsData) {
         label.setAttribute('fill', '#666');
         label.setAttribute('font-size', '10px');
         label.textContent = `${l}`;
-        l-=20
+        l -= 20
         svg.appendChild(label);
     }
 
@@ -652,9 +652,33 @@ function hideEnhancedTooltip() {
     }
 }
 
-function just(str){
-   let b = str.indexOf('_')
+function just(str) {
+    let b = str.indexOf('_')
 
-   return str.slice(b+1)
+    return str.slice(b + 1)
 
 }
+window.addEventListener('beforeunload', (e) => {
+    const savedToken = localStorage.getItem('jwtToken');
+
+    if (!savedToken) {
+
+        handleLogout()
+    }
+
+    try {
+        graphqlQuery(GET_USER_INFO)
+
+
+
+    } catch (err) {
+        console.log(6666);
+        
+        handleLogout()
+
+
+    }
+
+
+
+});

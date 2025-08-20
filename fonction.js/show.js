@@ -29,7 +29,14 @@ export function showProfile() {
 }
 
 
+function showError(message) {
+    errorMessage.textContent = message;
+    errorMessage.style.display = 'block';
+    setTimeout(()=>{
+            errorMessage.style.display = 'none';
 
+    },2000)
+}
 async function handleLogin(e) {
 
     e.preventDefault();
@@ -66,7 +73,7 @@ async function handleLogin(e) {
         await loadUserData();
 
     } catch (error) {
-        // showError('Login failed. Please check your credentials.');
+        showError('Login failed. Please check your credentials.');
         console.error('Login error:', error);
     }
 }

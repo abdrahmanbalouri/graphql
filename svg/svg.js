@@ -1,6 +1,5 @@
 export function generateEnhancedXPGraph(transactions) {
     const container = document.getElementById('xpBubbleGraph');
-    console.log(container,'kkkkk');
     
     container.innerHTML = '';
 
@@ -184,7 +183,6 @@ export function generateEnhancedSkillsGraph(skillsData) {
 
     const data = (skillsData && skillsData.user?.[0]?.transactions?.length > 0) ? skillsData : fallbackData;
     const transactions = data.user[0]?.transactions || [];
-    console.log(transactions);
 
 
     // Process skills data
@@ -205,7 +203,6 @@ export function generateEnhancedSkillsGraph(skillsData) {
 
         }
     });
-    console.log(skillMap);
 
 
     const skills = Array.from(skillMap.entries())

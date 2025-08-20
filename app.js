@@ -2,34 +2,25 @@ import { GET_USER_INFO } from './data/query.js'
 import { handleLogout, showProfile, loadUserData, graphqlQuery } from './fonction.js/show.js'
 
 
-export let jwtToken = null;
-export function setToken(newToken) {
-    jwtToken = newToken;
-}
-document.addEventListener('DOMContentLoaded', () => {
-    const savedToken = localStorage.getItem('jwtToken');
-    console.log(2121);
 
+document.addEventListener('DOMContentLoaded', async () => {
 
-    if (!savedToken) {
-
-        handleLogout()
-    }
 
     try {
-        graphqlQuery(GET_USER_INFO)
-        jwtToken = savedToken;
-        showProfile();
-        loadUserData();
+        let data = await graphqlQuery(GET_USER_INFO);
+        
+          console.log(data);
+          
+        if (data) {
 
 
-    } catch (err) {
-        console.log(6666);
+            showProfile();
+            loadUserData();
+        }else{
+          handleLogout()
+        }
 
-        handleLogout()
-
-
+    } catch (error) {
+        console.error("Error fetching user info:", error);
     }
-
-
 });

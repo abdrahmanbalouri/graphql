@@ -6,9 +6,7 @@
 
      body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(-45deg, #d8411367, #d1d1d6, #23a6d5, #9472c0);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
+            background: linear-gradient( #d4d4f1, #a6ccda);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -16,11 +14,7 @@
             margin: 0;
         }
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        
         .login-form {
             background: white;
             padding: 30px;

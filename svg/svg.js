@@ -67,7 +67,7 @@ export function generateEnhancedXPGraph(transactions) {
     processedData.forEach((d, i) => {
         const x = margin.left + (i / (processedData.length - 1)) * chartWidth;
         const y = margin.top + chartHeight - ((d.cumulativeXP - minXP) / (maxXP - minXP)) * chartHeight;
-        const radius = Math.min(Math.max(Math.sqrt(Math.abs(d.amount)) / 50, 4), 15);
+        const radius = Math.min(Math.max(Math.sqrt(Math.abs(d.amount/2)) / 50, 4), 15);
 
         const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         circle.setAttribute('cx', x);
@@ -107,7 +107,7 @@ export function generateEnhancedXPGraph(transactions) {
     xLabel.setAttribute('text-anchor', 'middle');
     xLabel.setAttribute('fill', '#666');
     xLabel.setAttribute('font-size', '12px');
-    xLabel.textContent = '2025 Projects Timeline';
+    xLabel.textContent = ' Projects Timeline';
     svg.appendChild(xLabel);
 
     const yLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
@@ -117,7 +117,7 @@ export function generateEnhancedXPGraph(transactions) {
     yLabel.setAttribute('transform', `rotate(-90, 15, ${height / 2})`);
     yLabel.setAttribute('fill', '#666');
     yLabel.setAttribute('font-size', '12px');
-    yLabel.textContent = 'Cumulative XP (5K+ only)';
+    yLabel.textContent = 'Cumulative XP ';
     svg.appendChild(yLabel);
 
     container.appendChild(svg);

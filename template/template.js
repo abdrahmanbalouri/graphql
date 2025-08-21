@@ -45,7 +45,7 @@ export const profile = ` <div id="profileSection" class="profile-section">
 
             <div class="graphs-section">
                 <div class="graph-container">
-                    <div class="graph-title">XP Progress Timeline (2025, 5K+ XP)</div>
+                    <div class="graph-title">XP Progress Timeline </div>
                     <div id="xpBubbleGraph" class="graph-content"></div>
                 </div>
                 <div class="graph-container">

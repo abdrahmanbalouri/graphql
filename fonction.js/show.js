@@ -142,8 +142,8 @@ export async function graphqlQuery(query, variables = {}) {
         });
 
         if (!response.ok) {
-            console.log(111);
-            
+         
+             
             throw new Error('error')
             
         }

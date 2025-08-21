@@ -1,6 +1,6 @@
 export function generateEnhancedXPGraph(transactions) {
     const container = document.getElementById('xpBubbleGraph');
-    
+
     container.innerHTML = '';
 
     // Filter for 2025 projects with minimum 5K XP
@@ -10,13 +10,7 @@ export function generateEnhancedXPGraph(transactions) {
     });
 
     // Use filtered data or fallback
-    const data = (filteredData && filteredData.length > 0) ? filteredData : [
-        { amount: 15360, createdAt: "2025-01-01T10:00:00Z", object: { name: "Web Development" } },
-        { amount: 20480, createdAt: "2025-02-01T10:00:00Z", object: { name: "API Design" } },
-        { amount: 10240, createdAt: "2025-03-01T10:00:00Z", object: { name: "Database Management" } },
-        { amount: 8192, createdAt: "2025-04-01T10:00:00Z", object: { name: "Frontend Framework" } },
-        { amount: 12288, createdAt: "2025-05-01T10:00:00Z", object: { name: "System Administration" } }
-    ];
+    const data = filteredData
 
     // Process data
     let cumulativeXP = 0;
@@ -61,16 +55,20 @@ export function generateEnhancedXPGraph(transactions) {
     const chartHeight = height - margin.top - margin.bottom;
 
     // Scales
-    const minDate = Math.min(...processedData.map(d => d.date.getTime()));
-    const maxDate = Math.max(...processedData.map(d => d.date.getTime()));
+    // const minDate = Math.min(...processedData.map(d => d.date.getTime()));
+    // const maxDate = Math.max(...processedData.map(d => d.date.getTime()));
     const maxXP = Math.max(...processedData.map(d => d.cumulativeXP));
+    const minXP = Math.min(...processedData.map(d => d.cumulativeXP));
+
 
     // Draw animated line
     const pathData = processedData.map((d, i) => {
         const x = margin.left + (i / (processedData.length - 1)) * chartWidth;
-        const y = margin.top + chartHeight - (d.cumulativeXP / maxXP) * chartHeight;
-        return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
+        const y = margin.top + chartHeight - ((d.cumulativeXP - minXP) / (maxXP - minXP)) * chartHeight;
+         return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
     }).join(' ');
+    console.log(pathData);
+
 
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', pathData);

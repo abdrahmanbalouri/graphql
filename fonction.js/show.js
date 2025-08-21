@@ -1,6 +1,6 @@
 import { login, profile } from '../template/template.js'
 import { AUTH_URL } from '../data/query.js'
-import { GRAPHQL_URL, GET_USER_INFO, GET_AUDITS_INFO, GET_LEVEL_INFO, GET_XP_PROGRESS, GET_SKILLS } from '../data/query.js'
+import { GRAPHQL_URL, GET_USER_INFO, GET_AUDITS_INFO, GET_LEVEL_INFO, GET_XP_PROGRESS, GET_SKILLS, GET_XP } from '../data/query.js'
 import { generateEnhancedXPGraph, generateEnhancedSkillsGraph } from '../svg/svg.js'
 
 export function handleLogout() {
@@ -20,10 +20,10 @@ export function showProfile() {
     appContainer.innerHTML = '';
     appContainer.innerHTML = profile
     const logoutBtn = document.getElementById('logoutBtn');
-  logoutBtn.addEventListener('click', () => {
-    localStorage.removeItem('jwtToken'); 
-    handleLogout(); 
-});
+    logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem('jwtToken');
+        handleLogout();
+    });
 
 
 }
@@ -32,10 +32,10 @@ export function showProfile() {
 function showError(message) {
     errorMessage.textContent = message;
     errorMessage.style.display = 'block';
-    setTimeout(()=>{
-            errorMessage.style.display = 'none';
+    setTimeout(() => {
+        errorMessage.style.display = 'none';
 
-    },2000)
+    }, 2000)
 }
 async function handleLogin(e) {
 
@@ -60,7 +60,7 @@ async function handleLogin(e) {
         });
 
         if (!response.ok) {
-            throw  Error('Invalid credentials');
+            throw Error('Invalid credentials');
         }
 
         const data = await response.json();
@@ -82,12 +82,14 @@ export async function loadUserData() {
         document.getElementById('userName').textContent = 'Loading...';
         document.getElementById('userLevel').textContent = 'Level: Loading...';
 
-        const [userInfo, auditsInfo, levelInfo, xpProgress, skillsData] = await Promise.all([
+        const [userInfo, auditsInfo, levelInfo, xpProgress, skillsData,getxp] = await Promise.all([
             graphqlQuery(GET_USER_INFO),
             graphqlQuery(GET_AUDITS_INFO),
             graphqlQuery(GET_LEVEL_INFO),
             graphqlQuery(GET_XP_PROGRESS),
-            graphqlQuery(GET_SKILLS)
+            graphqlQuery(GET_SKILLS),
+            graphqlQuery(GET_XP)
+
         ]);
 
         // Update user info
@@ -109,10 +111,10 @@ export async function loadUserData() {
         document.getElementById('passedAudits').textContent = passedAudits;
         document.getElementById('failedAudits').textContent = failedAudits;
 
-        // Update total XP
-        const totalXP = xpProgress.transaction.reduce((sum, tx) => sum + (tx.amount || 0), 0);
-        document.getElementById('totalXP').textContent = totalXP.toLocaleString();
+         
+        document.getElementById('totalXP').textContent = Math.floor((getxp.transaction_aggregate.aggregate.sum.amount)/ 1000)
 
+        console.log("test ",getxp.transaction_aggregate.aggregate.sum.amount);
 
 
         generateEnhancedXPGraph(xpProgress.transaction);
@@ -126,9 +128,9 @@ export async function graphqlQuery(query, variables = {}) {
 
     const savedToken = localStorage.getItem('jwtToken');
 
-       if(!savedToken){
+    if (!savedToken) {
         handleLogout()
-       }
+    }
 
 
     try {
@@ -142,20 +144,20 @@ export async function graphqlQuery(query, variables = {}) {
         });
 
         if (!response.ok) {
-         
-             
+
+
             throw new Error('error')
-            
+
         }
-        
+
         const data = await response.json();
-        
-        
-        
+
+
+
         return data.data;
     } catch (error) {
-        
-        
+
+
         handleLogout()
         console.error('GraphQL query error:', error);
     }

@@ -2,15 +2,20 @@ export function generateEnhancedXPGraph(transactions) {
     const container = document.getElementById('xpBubbleGraph');
 
     container.innerHTML = '';
-
-    // Filter for 2025 projects with minimum 5K XP
-    const filteredData = transactions.filter(tx => {
-        const date = new Date(tx.createdAt);
-        return date.getFullYear() === 2025 && (tx.amount >= 5120 || tx.amount <= -5120); // 5K XP
-    });
+       console.log(transactions);
+       
+    // // Filter for 2025 projects with minimum 5K XP
+    // const filteredData = transactions.filter(tx => {
+    //     const date = new Date(tx.createdAt);
+    //     return     ; // 5K XP
+    // });
+//   for(let i=0;i<filteredData.length;i++){
+//       console.log(filteredData[i]);
+      
+//   }    
 
     // Use filtered data or fallback
-    const data = filteredData
+    const data = transactions
 
     // Process data
     let cumulativeXP = 0;
@@ -134,7 +139,7 @@ export function generateEnhancedSkillsGraph(skillsData) {
 
 
     const data = skillsData
-    const transactions = data.user[0]?.transactions || [];
+    const transactions = data.user[0].transactions || [];
 
 
     // Process skills data
@@ -183,16 +188,7 @@ export function generateEnhancedSkillsGraph(skillsData) {
     svg.style.background = 'radial-gradient(circle, #f8f9fa 0%, #e9ecef 100%)';
     svg.style.borderRadius = '10px';
 
-    // Create gradient for bars
-    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-    const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
-    gradient.setAttribute('id', 'barGradient');
-    gradient.innerHTML = `
-        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
-        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
-    `;
-    defs.appendChild(gradient);
-    svg.appendChild(defs);
+
 
     // Scales
     const maxAmount = 100;
@@ -208,10 +204,8 @@ export function generateEnhancedSkillsGraph(skillsData) {
         rect.setAttribute('y', y);
         rect.setAttribute('width', barWidth - 5);
         rect.setAttribute('height', barHeight);
-        rect.setAttribute('fill', 'url(#barGradient)');
+        rect.setAttribute('fill', '#764ba2');
         rect.setAttribute('opacity', '0.8');
-        rect.setAttribute('stroke', 'white');
-        rect.setAttribute('stroke-width', '1');
         rect.style.cursor = 'pointer';
 
         // Tooltip on hover
@@ -234,9 +228,8 @@ export function generateEnhancedSkillsGraph(skillsData) {
 
         const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         label.setAttribute('x', x + barWidth / 2);
-        label.setAttribute('y', 280); // 15px below the top of the bar
-        label.setAttribute('text-anchor', 'middle');
-        label.setAttribute('fill', '#000000ff'); // White for contrast against gradient
+        label.setAttribute('y', 280); 
+        label.setAttribute('fill', '#000000ff'); 
         label.setAttribute('font-size', '10px');
         label.setAttribute('font-weight', '500');
         label.textContent = just(skill.type);
@@ -361,6 +354,20 @@ function hideEnhancedTooltip() {
 function just(str) {
     let b = str.indexOf('_')
 
-    return str.slice(b + 1)
+    str =  str.slice(b + 1)
+
+    for(let i = str.length-1;i>=0;i--){
+
+        if(str[i]=='-'){
+            str = str.slice(0,i)
+            break
+        }
+    }
+    return str
 
 }
+
+// function piscine(str){
+//     str = str.split(' ')
+//     if(str[0]==)
+// }

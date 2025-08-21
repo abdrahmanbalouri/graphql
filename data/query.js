@@ -41,13 +41,14 @@ export const GET_LEVEL_INFO = `
 export const GET_XP_PROGRESS = `
 {
   transaction(
-    where: {type: {_eq: "xp"}},
+       where: {type: {_eq: "xp"}, eventId: {_eq: 41},path:{_nilike:"%checkpoint%"}}
     order_by: {createdAt: asc}
   ) {
     amount
     createdAt
     object {
       name
+      type
     }
   }
 }`;
@@ -58,6 +59,18 @@ export const GET_SKILLS = `
     transactions(where: {type: {_nin: ["xp", "level", "up", "down"]}}) {
       type
       amount
+    }
+  }
+}`;
+export const GET_XP = `{
+  transaction_aggregate(
+    where: {type: {_eq: "xp"}, eventId: {_eq: 41}}
+    order_by: {createdAt: desc}
+  ) {
+    aggregate {
+      sum {
+        amount
+      }
     }
   }
 }`;

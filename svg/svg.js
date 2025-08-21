@@ -65,36 +65,13 @@ export function generateEnhancedXPGraph(transactions) {
     path.setAttribute('fill', 'none');
     path.setAttribute('stroke', '#764ba2');
     path.setAttribute('stroke-width', '3');
-    path.setAttribute('stroke-dasharray', '1000');
-    path.setAttribute('stroke-dashoffset', '1000');
-    path.style.animation = 'drawLine 2s ease-in-out forwards';
-    svg.appendChild(path);
 
-    // Add CSS animation
-    const style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
-    style.textContent = `
-        @keyframes drawLine {
-            to {
-                stroke-dashoffset: 0;
-            }
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-    `;
-    svg.appendChild(style);
+    svg.appendChild(path);
 
     // Draw enhanced bubbles
     processedData.forEach((d, i) => {
         const x = margin.left + (i / (processedData.length - 1)) * chartWidth;
-        const y = margin.top + chartHeight - (d.cumulativeXP / maxXP) * chartHeight;
+        const y = margin.top + chartHeight - ((d.cumulativeXP - minXP) / (maxXP - minXP)) * chartHeight;
         const radius = Math.min(Math.max(Math.sqrt(Math.abs(d.amount)) / 50, 4), 15);
 
         const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -105,8 +82,6 @@ export function generateEnhancedXPGraph(transactions) {
         circle.setAttribute('opacity', '0.8');
         circle.setAttribute('stroke', 'white');
         circle.setAttribute('stroke-width', '2');
-        circle.style.filter = 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))';
-        circle.style.animation = `fadeIn 0.6s ease-out ${i * 0.2}s both`;
         circle.style.cursor = 'pointer';
 
         // Enhanced hover effects
@@ -156,20 +131,9 @@ export function generateEnhancedSkillsGraph(skillsData) {
     const container = document.getElementById('skillsPolarGraph');
     container.innerHTML = '';
 
-    const fallbackData = {
-        user: [{
-            transactions: [
-                { type: "JavaScript", amount: 25600 },
-                { type: "Go", amount: 20480 },
-                { type: "Python", amount: 15360 },
-                { type: "Docker", amount: 12288 },
-                { type: "SQL", amount: 10240 },
-                { type: "Git", amount: 8192 }
-            ]
-        }]
-    };
 
-    const data = (skillsData && skillsData.user?.[0]?.transactions?.length > 0) ? skillsData : fallbackData;
+
+    const data = skillsData
     const transactions = data.user[0]?.transactions || [];
 
 

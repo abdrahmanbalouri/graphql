@@ -60,7 +60,7 @@ async function handleLogin(e) {
         });
 
         if (!response.ok) {
-            throw new Error('Invalid credentials');
+            throw  Error('Invalid credentials');
         }
 
         const data = await response.json();
@@ -142,22 +142,21 @@ export async function graphqlQuery(query, variables = {}) {
         });
 
         if (!response.ok) {
-            console.log(222);
-
-            handleLogout()
-            return
+            console.log(111);
+            
+            throw new Error('error')
+            
         }
-
+        
         const data = await response.json();
-
-        if (data.errors) {
-            throw new Error(data.errors[0].message);
-        }
-
+        
+        
+        
         return data.data;
     } catch (error) {
-
-
+        
+        
+        handleLogout()
         console.error('GraphQL query error:', error);
     }
 }

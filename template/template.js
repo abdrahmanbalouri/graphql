@@ -1,12 +1,12 @@
 export const login = `<div class="container">
         <div class="header">
-            <h1>Learn Dashboard</h1>
-            <p>Track your progress and achievements</p>
+            <h1>zone01</h1>
+            <p>graph for you</p>
         </div>
 
         <div id="loginSection" class="login-section">
             <form id="loginForm" class="login-form">
-                <h2>Login to Dashboard</h2>
+                <h2>Login </h2>
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" required>

@@ -8,16 +8,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     try {
         let data = await graphqlQuery(GET_USER_INFO);
-        
-          console.log(data);
-          
+
         if (data) {
-
-
-            showProfile();
+      showProfile();
             loadUserData();
-        }else{
-          handleLogout()
+        } else {
+            handleLogout()
         }
 
     } catch (error) {

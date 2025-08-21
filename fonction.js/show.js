@@ -111,8 +111,13 @@ export async function loadUserData() {
         document.getElementById('passedAudits').textContent = passedAudits;
         document.getElementById('failedAudits').textContent = failedAudits;
 
+         let XP =(getxp.transaction_aggregate.aggregate.sum.amount).toLocaleString()
          
-        document.getElementById('totalXP').textContent = Math.floor((getxp.transaction_aggregate.aggregate.sum.amount)/ 1000)
+         let VERGUL = XP.indexOf(',')
+         console.log(VERGUL);
+
+         let XPP = XP.slice(0,VERGUL)
+        document.getElementById('totalXP').textContent = XPP
 
         console.log("test ",getxp.transaction_aggregate.aggregate.sum.amount);
 

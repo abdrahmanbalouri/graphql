@@ -26,7 +26,7 @@ export function generateEnhancedXPGraph(transactions) {
 
     const width = 550;
     const height = 300;
-    const margin = { top: 20, right: 30, bottom: 40, left: 50 };
+    const margin = { top: 40, right: 50, bottom: 40, left: 50 };
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', width);
@@ -187,7 +187,7 @@ export function generateEnhancedSkillsGraph(skillsData) {
     skills.forEach((skill, i) => {
         const x = margin.left + i * barWidth;
         const barHeight = (skill.amount / maxAmount) * chartHeight;
-        const y = margin.top + chartHeight - barHeight;
+        const y =  margin.top +chartHeight - barHeight;
 
         const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         rect.setAttribute('x', x);
@@ -287,7 +287,7 @@ export function generateEnhancedSkillsGraph(skillsData) {
     yLabel.setAttribute('y', height / 2);
     yLabel.setAttribute('text-anchor', 'middle');
     yLabel.setAttribute('transform', `rotate(-90, 15, ${height / 2})`);
-    yLabel.setAttribute('fill', '#666');
+    yLabel.setAttribute('fill', '#630a0aff');
     yLabel.setAttribute('font-size', '12px');
     yLabel.textContent = 'XP Amount';
     svg.appendChild(yLabel);

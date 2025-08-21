@@ -1,10 +1,6 @@
 export const login = `<div class="container">
-        <div class="header">
-            <h1>zone01</h1>
-            <p>graph for you</p>
-        </div>
+       
 
-        <div id="loginSection" class="login-section">
             <form id="loginForm" class="login-form">
                 <h2>Login </h2>
                 <div class="form-group">
@@ -17,8 +13,7 @@ export const login = `<div class="container">
                 </div>
                 <button type="submit" class="login-btn">Login</button>
                 <div id="errorMessage" class="error-message" style="display: none;"></div>
-            </form>
-        </div>`
+            </form>`
 
 export const profile = ` <div id="profileSection" class="profile-section">
             <div class="profile-header">
@@ -54,7 +49,7 @@ export const profile = ` <div id="profileSection" class="profile-section">
                     <div id="xpBubbleGraph" class="graph-content"></div>
                 </div>
                 <div class="graph-container">
-                    <div class="graph-title">Skills Wheel</div>
+                    <div class="graph-title">Skills</div>
                     <div id="skillsPolarGraph" class="graph-content"></div>
                 </div>
             </div>

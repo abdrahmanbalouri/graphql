@@ -40,16 +40,6 @@ export function generateEnhancedXPGraph(transactions) {
     svg.style.background = 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)';
     svg.style.borderRadius = '10px';
 
-    // Create gradient definitions
-    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-    const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
-    gradient.setAttribute('id', 'bubbleGradient');
-    gradient.innerHTML = `
-        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
-        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
-    `;
-    defs.appendChild(gradient);
-    svg.appendChild(defs);
 
     const chartWidth = width - margin.left - margin.right;
     const chartHeight = height - margin.top - margin.bottom;
@@ -65,7 +55,7 @@ export function generateEnhancedXPGraph(transactions) {
     const pathData = processedData.map((d, i) => {
         const x = margin.left + (i / (processedData.length - 1)) * chartWidth;
         const y = margin.top + chartHeight - ((d.cumulativeXP - minXP) / (maxXP - minXP)) * chartHeight;
-         return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
+        return `${i === 0 ? 'M' : 'L'} ${x} ${y}`;
     }).join(' ');
     console.log(pathData);
 
@@ -73,7 +63,7 @@ export function generateEnhancedXPGraph(transactions) {
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', pathData);
     path.setAttribute('fill', 'none');
-    path.setAttribute('stroke', 'url(#bubbleGradient)');
+    path.setAttribute('stroke', '#764ba2');
     path.setAttribute('stroke-width', '3');
     path.setAttribute('stroke-dasharray', '1000');
     path.setAttribute('stroke-dashoffset', '1000');
@@ -111,7 +101,7 @@ export function generateEnhancedXPGraph(transactions) {
         circle.setAttribute('cx', x);
         circle.setAttribute('cy', y);
         circle.setAttribute('r', radius);
-        circle.setAttribute('fill', 'url(#bubbleGradient)');
+        circle.setAttribute('fill', '#764ba2');
         circle.setAttribute('opacity', '0.8');
         circle.setAttribute('stroke', 'white');
         circle.setAttribute('stroke-width', '2');

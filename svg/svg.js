@@ -4,17 +4,7 @@ export function generateEnhancedXPGraph(transactions) {
     container.innerHTML = '';
        console.log(transactions);
        
-    // // Filter for 2025 projects with minimum 5K XP
-    // const filteredData = transactions.filter(tx => {
-    //     const date = new Date(tx.createdAt);
-    //     return     ; // 5K XP
-    // });
-//   for(let i=0;i<filteredData.length;i++){
-//       console.log(filteredData[i]);
-      
-//   }    
-
-    // Use filtered data or fallback
+    
     const data = transactions
 
     // Process data
@@ -317,8 +307,7 @@ function showEnhancedTooltip(event, data) {
     if (data.project) {
         content = `
             <strong>${data.project}</strong><br>
-            XP: +${(data.xp / 1024).toFixed(1)}K<br>
-            Total: ${(data.total / 1024).toFixed(1)}K<br>
+            XP: ${(data.xp / 1024).toFixed(1)}K<br>
             <small>${data.date}</small>
         `;
     } else if (data.skill) {

@@ -129,41 +129,29 @@ export async function loadUserData() {
         console.error('Error loading user data:', error);
     }
 }
-export async function graphqlQuery(query, variables = {}) {
+export async function graphqlQuery(query) {
+  const savedToken = localStorage.getItem('jwtToken');
+  if (!savedToken) handleLogout();
 
-    const savedToken = localStorage.getItem('jwtToken');
+  try {
+    const body = { query };
+   
+    const response = await fetch(GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${savedToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
 
-    if (!savedToken) {
-        handleLogout()
-    }
+    if (!response.ok) throw new Error('error');
 
+    const data = await response.json();
+    return data.data;
 
-    try {
-        const response = await fetch(GRAPHQL_URL, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${savedToken}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ query, variables })
-        });
-
-        if (!response.ok) {
-
-
-            throw new Error('error')
-
-        }
-
-        const data = await response.json();
-
-
-
-        return data.data;
-    } catch (error) {
-
-
-        handleLogout()
-        console.error('GraphQL query error:', error);
-    }
+  } catch (error) {
+    handleLogout();
+    console.error('GraphQL query error:', error);
+  }
 }
